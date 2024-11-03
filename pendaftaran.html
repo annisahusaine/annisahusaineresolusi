@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Rumah Sakit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            animation: fadeIn 2s;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            animation: slideIn 1s;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 10px 0 5px;
+        }
+
+        input, select {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            background: #00f2fe;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #4facfe;
+        }
+
+        .testimonials {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .testimonial {
+            margin: 10px 0;
+            font-style: italic;
+        }
+
+        .result {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .registration-list {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .registration-item {
+            margin: 10px 0;
+        }
+
+        .edit-button, .delete-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background: #ff9800;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .delete-button {
+            background: #f44336;
+        }
+
+        .edit-button:hover {
+            background: #e68a00;
+        }
+
+        .delete-button:hover {
+            background: #d32f2f;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Pendaftaran Rumah Sakit</h1>
+</header>
+
+<div class="container">
+    <h2>Daftar Sekarang untuk Layanan Kesehatan Terbaik</h2>
+    <form id="registrationForm" onsubmit="return handleSubmit(event)">
+        <label for="name">Nama Lengkap:</label>
+        <input type="text" id="name" required>
+
+        <label for="dob">Tanggal Lahir:</label>
+        <input type="date" id="dob" required>
+
+        <label for="gender">Jenis Kelamin:</label>
+        <select id="gender" required>
+            <option value="">Pilih...</option>
+            <option value="male">Laki-laki</option>
+            <option value="female">Perempuan</option>
+        </select>
+
+        <label for="address">Alamat:</label>
+        <input type="text" id="address" required>
+
+        <label for="phone">Nomor Telepon:</label>
+        <input type="tel" id="phone" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+
+        <label for="service">Pilih Layanan yang Diinginkan:</label>
+        <select id="service" required>
+            <option value="">Pilih...</option>
+            <option value="consultation">Konsultasi</option>
+            <option value="emergency">Darurat</option>
+            <option value="checkup">Pemeriksaan Rutin</option>
+        </select>
+
+        <button type="submit">Daftar</button>
+    </form>
+
+    <div class="registration-list" id="registrationList">
+        <h3>Data Pendaftaran:</h3>
+    </div>
+
+    <div class="testimonials">
+        <h3>Testimoni Pasien</h3>
+        <div class="testimonial">"Pelayanan yang sangat baik dan profesional!"</div>
+        <div class="testimonial">"Fasilitas lengkap dan nyaman. Sangat merekomendasikan."</div>
+        <div class="testimonial">"Dokternya ramah dan membantu. Terima kasih!"</div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 Rumah Sakit Sehat. Semua hak dilindungi.</p>
+</footer>
+
+<script>
+    let registrations = [];
+
+    function handleSubmit(event) {
+        event.preventDefault(); // Mencegah pengiriman form default
+        
+        // Ambil nilai dari form
+        const newRegistration = {
+            name: document.getElementById('name').value,
+            dob: document.getElementById('dob').value,
+            gender: document.getElementById('gender').value,
+            address: document.getElementById('address').value,
+            phone: document.getElementById('phone').value,
+            email: document.getElementById('email').value,
+            service: document.getElementById('service').value
+        };
+
+        registrations.push(newRegistration); // Simpan data ke array
+        displayRegistrations(); // Tampilkan semua pendaftaran
+        document.getElementById('registrationForm').reset(); // Reset form
+    }
+
+    function displayRegistrations() {
+        const registrationList = document.getElementById('registrationList');
+        registrationList.innerHTML = '<h3>Data Pendaftaran:</h3>';
+
+        registrations.forEach((reg, index) => {
+            const regItem = document.createElement('div');
+            regItem.classList.add('registration-item');
+            regItem.innerHTML = `
+                <strong>Nama:</strong> ${reg.name}<br>
+                <strong>Tanggal Lahir:</strong> ${reg.dob}<br>
+                <strong>Jenis Kelamin:</strong> ${reg.gender === 'male' ? 'Laki-laki' : 'Perempuan'}<br>
+                <strong>Alamat:</strong> ${reg.address}<br>
+                <strong>Nomor Telepon:</strong> ${reg.phone}<br>
+                <strong>Email:</strong> ${reg.email}<br>
+                <strong>Layanan:</strong> ${reg.service}<br>
+                <button class="edit-button" onclick="editData(${index})">Edit</button>
+                <button class="delete-button" onclick="deleteData(${index})">Hapus</button>
+            `;
+            registrationList.appendChild(regItem);
+        });
+    }
+
+    function editData(index) {
+        const reg = registrations[index];
+        document.getElementById('name').value = reg.name;
+        document.getElementById('dob').value = reg.dob;
+        document.getElementById('gender').value = reg.gender;
+        document.getElementById('address').value = reg.address;
+        document.getElementById('phone').value = reg.phone;
+        document.getElementById('email').value = reg.email;
+        document.getElementById('service').value = reg.service;
+
+        deleteData(index); // Hapus data lama setelah mengedit
+    }
+
+    function deleteData(index) {
+        registrations.splice(index, 1); // Hapus data dari array
+        displayRegistrations(); // Tampilkan semua pendaftaran
+    }
+</script>
+
+</body>
+</html>

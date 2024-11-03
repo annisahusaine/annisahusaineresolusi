@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Rumah Sakit</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: #fff;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #4caf50;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .form-section {
+            margin: 20px 0;
+        }
+        .form-section h2 {
+            margin-bottom: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>CRUD Rumah Sakit</h1>
+    <div>
+        <button onclick="showSection('doctorSection')">CRUD Dokter</button>
+        <button onclick="showSection('scheduleSection')">CRUD Jadwal</button>
+        <button onclick="showSection('diseaseSection')">CRUD Penyakit & Diagnosa</button>
+        <button onclick="showSection('pharmacySection')">CRUD Apotek</button>
+    </div>
+
+    <!-- CRUD Dokter -->
+    <div id="doctorSection" class="form-section" style="display:none;">
+        <h2>CRUD Dokter</h2>
+        <form id="doctorForm">
+            <input type="text" id="doctorName" placeholder="Nama Dokter" required>
+            <input type="text" id="doctorSpecialty" placeholder="Spesialis" required>
+            <button type="submit">Tambah Dokter</button>
+        </form>
+        <div id="doctorList"></div>
+    </div>
+
+    <!-- CRUD Jadwal -->
+    <div id="scheduleSection" class="form-section" style="display:none;">
+        <h2>CRUD Jadwal</h2>
+        <form id="scheduleForm">
+            <input type="text" id="scheduleDoctor" placeholder="Nama Dokter" required>
+            <input type="date" id="scheduleDate" required>
+            <button type="submit">Tambah Jadwal</button>
+        </form>
+        <div id="scheduleList"></div>
+    </div>
+
+    <!-- CRUD Penyakit & Diagnosa -->
+    <div id="diseaseSection" class="form-section" style="display:none;">
+        <h2>CRUD Penyakit & Diagnosa</h2>
+        <form id="diseaseForm">
+            <input type="text" id="diseaseName" placeholder="Nama Penyakit" required>
+            <input type="text" id="diagnosis" placeholder="Diagnosa" required>
+            <button type="submit">Tambah Penyakit</button>
+        </form>
+        <div id="diseaseList"></div>
+    </div>
+
+    <!-- CRUD Apotek -->
+    <div id="pharmacySection" class="form-section" style="display:none;">
+        <h2>CRUD Apotek</h2>
+        <form id="pharmacyForm">
+            <input type="text" id="medicationName" placeholder="Nama Obat" required>
+            <input type="number" id="medicationPrice" placeholder="Harga Obat" required>
+            <button type="submit">Tambah Obat</button>
+        </form>
+        <div id="pharmacyList"></div>
+        <button id="finishButton" style="display:none;" onclick="finishRegistration()">Selesai Pendaftaran</button>
+    </div>
+</div>
+
+<script>
+    let doctors = [];
+    let schedules = [];
+    let diseases = [];
+    let pharmacies = [];
+
+    function showSection(section) {
+        document.getElementById('doctorSection').style.display = 'none';
+        document.getElementById('scheduleSection').style.display = 'none';
+        document.getElementById('diseaseSection').style.display = 'none';
+        document.getElementById('pharmacySection').style.display = 'none';
+
+        document.getElementById(section).style.display = 'block';
+    }
+
+    document.getElementById('doctorForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const name = document.getElementById('doctorName').value;
+        const specialty = document.getElementById('doctorSpecialty').value;
+        doctors.push({ name, specialty });
+        displayDoctors();
+        this.reset();
+    });
+
+    document.getElementById('scheduleForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const doctor = document.getElementById('scheduleDoctor').value;
+        const date = document.getElementById('scheduleDate').value;
+        schedules.push({ doctor, date });
+        displaySchedules();
+        this.reset();
+    });
+
+    document.getElementById('diseaseForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const name = document.getElementById('diseaseName').value;
+        const diagnosis = document.getElementById('diagnosis').value;
+        diseases.push({ name, diagnosis });
+        displayDiseases();
+        this.reset();
+    });
+
+    document.getElementById('pharmacyForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const name = document.getElementById('medicationName').value;
+        const price = document.getElementById('medicationPrice').value;
+        pharmacies.push({ name, price });
+        displayPharmacies();
+        this.reset();
+        document.getElementById('finishButton').style.display = 'block'; // Tampilkan tombol selesai pendaftaran
+    });
+
+    function displayDoctors() {
+        const list = document.getElementById('doctorList');
+        list.innerHTML = '<h3>Daftar Dokter:</h3>' + doctors.map(doc => `<p>${doc.name} - ${doc.specialty}</p>`).join('');
+    }
+
+    function displaySchedules() {
+        const list = document.getElementById('scheduleList');
+        list.innerHTML = '<h3>Jadwal Dokter:</h3>' + schedules.map(schedule => `<p>${schedule.doctor} - ${schedule.date}</p>`).join('');
+    }
+
+    function displayDiseases() {
+        const list = document.getElementById('diseaseList');
+        list.innerHTML = '<h3>Daftar Penyakit:</h3>' + diseases.map(disease => `<p>${disease.name} - Diagnosa: ${disease.diagnosis}</p>`).join('');
+    }
+
+    function displayPharmacies() {
+        const list = document.getElementById('pharmacyList');
+        list.innerHTML = '<h3>Daftar Obat:</h3>' + pharmacies.map(pharmacy => `<p>${pharmacy.name} - Harga: ${pharmacy.price}</p>`).join('');
+    }
+
+    function finishRegistration() {
+        alert('Pendaftaran selesai!'); // Tampilkan pesan selesai
+        // Arahkan ke halaman lain setelah selesai pendaftaran
+        window.location.href = 'http://127.0.0.1:5500/index.html'; // Ganti dengan URL halaman yang sesuai
+    }
+</script>
+
+</body>
+</html>
