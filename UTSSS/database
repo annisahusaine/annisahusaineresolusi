@@ -1,0 +1,21 @@
+-- Membuat database PT Sejahtera
+CREATE DATABASE pt_sejahtera;
+
+-- Menggunakan database PT Sejahtera
+USE pt_sejahtera;
+
+-- Membuat tabel pasokan untuk menyimpan data pasokan ikan
+CREATE TABLE pasokan (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- ID unik untuk setiap pasokan
+    jenis_ikan VARCHAR(255) NOT NULL,  -- Jenis ikan yang tersedia
+    jumlah INT NOT NULL                -- Jumlah pasokan ikan
+);
+
+-- Membuat tabel transaksi untuk mencatat penjualan ikan
+CREATE TABLE transaksi (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- ID unik untuk setiap transaksi
+    jenis_ikan VARCHAR(255) NOT NULL,   -- Jenis ikan yang terjual
+    jumlah_terjual INT NOT NULL,        -- Jumlah ikan yang terjual
+    harga_total DECIMAL(10, 2) NOT NULL,-- Total harga dari penjualan
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Waktu transaksi
+);
