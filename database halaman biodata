@@ -1,0 +1,13 @@
+-- Membuat database Biodata Management
+CREATE DATABASE biodata_db;
+
+-- Menggunakan database Biodata Management
+USE biodata_db;
+
+-- Membuat tabel biodata untuk menyimpan data pengguna
+CREATE TABLE biodata (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- ID unik untuk setiap biodata
+    nama VARCHAR(255) NOT NULL,        -- Nama pengguna
+    umur INT NOT NULL,                 -- Umur pengguna
+    alamat TEXT NOT NULL               -- Alamat pengguna
+);
