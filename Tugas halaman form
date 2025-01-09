@@ -1,0 +1,113 @@
+// Import modules
+const express = require("express");
+const session = require("express-session");
+const mysql = require("mysql2");
+const bodyParser = require("body-parser");
+const path = require("path");
+const app = express();
+
+// Middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: "form_secret",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+// Database connection
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "form_db",
+});
+
+db.connect((err) => {
+  if (err) throw err;
+  console.log("Database connected!");
+});
+
+// Routes
+
+// Home route
+app.get("/", (req, res) => {
+  res.render("index", { username: req.session.username || "Guest" });
+});
+
+// Show form page
+app.get("/form", (req, res) => {
+  res.render("form", { message: "" });
+});
+
+// Handle form submission
+app.post("/form", (req, res) => {
+  const { nama, email, pesan } = req.body;
+  const sql = "INSERT INTO form_data (nama, email, pesan) VALUES (?, ?, ?)";
+  db.query(sql, [nama, email, pesan], (err, result) => {
+    if (err) throw err;
+    res.render("form", { message: "Form berhasil dikirim!" });
+  });
+});
+
+// Show all form entries
+app.get("/entries", (req, res) => {
+  const sql = "SELECT * FROM form_data";
+  db.query(sql, (err, results) => {
+    if (err) throw err;
+    res.render("entries", { data: results });
+  });
+});
+
+// Edit form entry
+app.get("/edit/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "SELECT * FROM form_data WHERE id = ?";
+  db.query(sql, [id], (err, results) => {
+    if (err) throw err;
+    res.render("edit", { data: results[0] });
+  });
+});
+
+app.post("/edit/:id", (req, res) => {
+  const { id } = req.params;
+  const { nama, email, pesan } = req.body;
+  const sql = "UPDATE form_data SET nama = ?, email = ?, pesan = ? WHERE id = ?";
+  db.query(sql, [nama, email, pesan, id], (err, result) => {
+    if (err) throw err;
+    res.redirect("/entries");
+  });
+});
+
+// Delete form entry
+app.get("/delete/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "DELETE FROM form_data WHERE id = ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) throw err;
+    res.redirect("/entries");
+  });
+});
+
+// Session example
+app.get("/login", (req, res) => {
+  req.session.username = "user";
+  res.redirect("/");
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) throw err;
+    res.redirect("/");
+  });
+});
+
+// Start server
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
