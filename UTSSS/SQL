@@ -1,0 +1,17 @@
+CREATE DATABASE pt_sejahtera;
+
+USE pt_sejahtera;
+
+CREATE TABLE pasokan (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    jenis_ikan VARCHAR(255) NOT NULL,
+    jumlah INT NOT NULL
+);
+
+CREATE TABLE transaksi (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    jenis_ikan VARCHAR(255) NOT NULL,
+    jumlah_terjual INT NOT NULL,
+    harga_total DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
