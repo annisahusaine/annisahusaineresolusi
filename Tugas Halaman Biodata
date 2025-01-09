@@ -1,0 +1,101 @@
+// Import modules
+const express = require("express");
+const session = require("express-session");
+const mysql = require("mysql2");
+const bodyParser = require("body-parser");
+const app = express();
+
+// Middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: "biodata_secret",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+// Database connection
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "biodata_db",
+});
+
+db.connect((err) => {
+  if (err) throw err;
+  console.log("Database connected!");
+});
+
+// Routes
+
+// Home route
+app.get("/", (req, res) => {
+  res.send("Welcome to the Biodata Management System!");
+});
+
+// Create a new biodata entry
+app.post("/biodata", (req, res) => {
+  const { nama, umur, alamat } = req.body;
+  const sql = "INSERT INTO biodata (nama, umur, alamat) VALUES (?, ?, ?)";
+  db.query(sql, [nama, umur, alamat], (err, result) => {
+    if (err) throw err;
+    res.json({ message: "Biodata berhasil ditambahkan", id: result.insertId });
+  });
+});
+
+// Get all biodata entries
+app.get("/biodata", (req, res) => {
+  const sql = "SELECT * FROM biodata";
+  db.query(sql, (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
+
+// Update biodata entry
+app.put("/biodata/:id", (req, res) => {
+  const { id } = req.params;
+  const { nama, umur, alamat } = req.body;
+  const sql = "UPDATE biodata SET nama = ?, umur = ?, alamat = ? WHERE id = ?";
+  db.query(sql, [nama, umur, alamat, id], (err, result) => {
+    if (err) throw err;
+    res.json({ message: "Biodata berhasil diperbarui" });
+  });
+});
+
+// Delete biodata entry
+app.delete("/biodata/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "DELETE FROM biodata WHERE id = ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) throw err;
+    res.json({ message: "Biodata berhasil dihapus" });
+  });
+});
+
+// Session example
+app.get("/session", (req, res) => {
+  if (!req.session.username) {
+    req.session.username = "user";
+    res.send("Session created for user.");
+  } else {
+    res.send(`Welcome back, ${req.session.username}`);
+  }
+});
+
+// Logout session
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) throw err;
+    res.send("Logged out successfully.");
+  });
+});
+
+// Start server
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
